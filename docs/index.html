@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="jquery-3.6.0.min.js"></script>
+		<title>Anime Scavenger Hunt</title>
+		<style>
+			*{
+				font-size: 30px
+			}
+			.center{
+				padding-top: 100px;
+				text-align: center;
+				margin: auto;
+				width: 80%;
+			}
+			h1{
+				font-size: 150px;
+			}
+			h2{
+				font-size: 100px;
+			}
+			button{
+				padding: 10px 10px;
+			}
+			.first{
+				background-color: gold;
+			}
+			.first:hover{
+				background-color: goldenrod;
+			}
+			.second{
+				background-color: silver;
+			}
+			.second:hover{
+				background-color: grey;
+			}
+			.third{
+				background-color: darkgoldenrod;
+			}
+			.third:hover{
+				background-color: sienna;
+			}
+			.other{
+				background-color: turquoise;
+			}
+			.other:hover{
+				background-color: darkturquoise;
+			}
+			.minus{
+				background-color: red;
+			}
+			.minus:hover{
+				background-color: firebrick;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="menu" class="center" style="display: block;">
+			<h1>Anime Scavenger Hunt</h1>
+			<div>
+				<label style="font-size: 50px;">Timer (seconds):</label>
+				<input type="number" id="timer_val" value=180 style="width: 200px; font-size: 50px;">
+			</div>
+			<br>
+			<button onclick="startGame()" style="padding: 30px 30px; font-size: 50px;">Start Game</button>
+		</div>
+
+		<div id="game" class="center" style="display: none; padding-top: 0px;">
+			<textarea id="prompt" rows="3" style="width: 1600px; margin-top: 50px; font-size: 50px;"></textarea>
+			<p id="timer" style="margin: 10px; font-size: 50px;">Seconds left: 0</p>
+			<button onclick="startTimer()">Start timer</button>
+			<button onclick="sortScores()">Sort scores</button>
+			<button onclick="addRow()">Add player</button>
+			<button onclick="window.location.reload();" style="margin-left: 400px;">Quit</button>
+			<table id="score_tbl" class = "center" style="margin-top: 10px; border-spacing: 20px; padding-top: 0px;">
+				<tr>
+					<th>Name</th>
+					<th>Score</th>
+					<th>1st</th>
+					<th>2nd</th>
+					<th>3rd</th>
+					<th>Other</th>
+					<th>Minus</th>
+				</tr>
+				<tr>
+					<td id="col0"><input type="text"></td>
+					<td id="col1" class="score">0</td>
+					<td id="col2"><button onclick="addScore(this, 5)" class="first">+5</button></td>
+					<td id="col3"><button onclick="addScore(this, 3)" class="second">+3</button></td>
+					<td id="col4"><button onclick="addScore(this, 2)" class="third">+2</button></td>
+					<td id="col5"><button onclick="addScore(this, 1)" class="other">+1</button></td>
+					<td id="col6"><button onclick="addScore(this, -1)" class="minus">-1</button></td>
+				</tr>
+			</table>
+		</div>
+	</body>
+
+	<script>
+		var timer;
+		var timer_val;
+
+		function startGame(){
+			document.getElementById("menu").style.display = "none"
+			document.getElementById("game").style.display = "block"
+
+			timer_val = document.getElementById("timer_val").value;
+		}
+
+		function startTimer(){
+			// have to show timer once before entering setInterval since setInterval waits out the duration BEFORE first run
+			var timer_time = timer_val
+			document.getElementById("timer").innerHTML = "Seconds left: " + timer_time;
+			timer = setInterval(function(){
+				timer_time--;
+
+				// end when timer hits -1 so it displays the 0 on screen
+				if(timer_time < 0){
+					document.getElementById("prompt").value = "Time's up!"
+					clearInterval(timer);
+					return;
+				}
+
+				document.getElementById("timer").innerHTML = "Seconds left: " + timer_time;
+			}, 1000);
+		}
+
+		//https://stackoverflow.com/questions/2315600/jquery-getting-the-text-value-of-a-table-cell-in-the-same-row-as-a-clicked-ele
+		function addScore(self, score){
+			var currScore = $(self).closest('tr').children('td.score').text();
+			newScore = parseInt(currScore) + score;
+			$(self).closest('tr').children('td.score').text(newScore);
+		}
+
+		//https://www.etutorialspoint.com/index.php/11-dynamically-add-delete-html-table-rows-using-javascript	
+		function addRow(){
+			var table = document.getElementById('score_tbl');
+			var rowCount = table.rows.length;
+			var cellCount = table.rows[0].cells.length; 
+			var row = table.insertRow(rowCount);
+			for(var i = 0; i <= cellCount; i++){
+				var cell = 'cell'+i;
+				cell = row.insertCell(i);
+				var copycel = document.getElementById('col'+i).innerHTML;
+				cell.innerHTML = copycel;
+				if(i == 1){
+					cell.classList.add("score");
+					cell.innerHTML = 0;
+				}
+			}
+		}
+
+		//https://www.w3schools.com/howto/howto_js_sort_table.asp
+		function sortScores() {
+			var table, rows, switching, i, x, y, shouldSwitch;
+			table = document.getElementById("score_tbl");
+			switching = true;
+				while (switching) {
+					switching = false;
+					rows = table.rows;
+						for (i = 1; i < (rows.length - 1); i++) {
+						shouldSwitch = false;
+						x = rows[i].getElementsByTagName("TD")[1];
+						y = rows[i + 1].getElementsByTagName("TD")[1];
+						if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+							shouldSwitch = true;
+							break;
+						}
+					}
+					if (shouldSwitch) {
+					rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+					switching = true;
+					}
+				}
+			}
+	</script>
+</html>
