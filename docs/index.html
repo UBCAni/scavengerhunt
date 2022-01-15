@@ -19,6 +19,10 @@
 			h2{
 				font-size: 100px;
 			}
+			ul li{
+				font-size: 22px;
+				text-align: left;
+			}
 			button{
 				padding: 10px 10px;
 			}
@@ -72,26 +76,42 @@
 			<button onclick="sortScores()">Sort scores</button>
 			<button onclick="addRow()">Add player</button>
 			<button onclick="window.location.reload();" style="margin-left: 400px;">Quit</button>
-			<table id="score_tbl" class = "center" style="margin-top: 10px; border-spacing: 20px; padding-top: 0px;">
-				<tr>
-					<th>Name</th>
-					<th>Score</th>
-					<th>1st</th>
-					<th>2nd</th>
-					<th>3rd</th>
-					<th>Other</th>
-					<th>Minus</th>
-				</tr>
-				<tr>
-					<td id="col0"><input type="text"></td>
-					<td id="col1" class="score">0</td>
-					<td id="col2"><button onclick="addScore(this, 5)" class="first">+5</button></td>
-					<td id="col3"><button onclick="addScore(this, 3)" class="second">+3</button></td>
-					<td id="col4"><button onclick="addScore(this, 2)" class="third">+2</button></td>
-					<td id="col5"><button onclick="addScore(this, 1)" class="other">+1</button></td>
-					<td id="col6"><button onclick="addScore(this, -1)" class="minus">-1</button></td>
-				</tr>
-			</table>
+			<div style="display: flex;">
+				<div style="padding-top: 20px; width: 500px;">
+					<b>RULES</b>
+					<ul style="margin-top: 10px;">
+						<li>Contestants are given a prompt and must find a matching screenshot from an anime (no games, Western animation, official art, etc).</li>
+						<li>Once you have found a screenshot that you believe fits the prompt, post it into the text channel, spoilered so others cannot copy it.</li>
+						<li>You must also type the name of the anime it is from. You don't need to name the season.</li>
+						<li>As soon as contestants see the prompt, the timer (3 minutes) starts.</li>
+						<li>Each round, the accepted screenshot that receives the highest number of ⭐ reacts will receive a bonus point.</li>
+						<li>No R-18 source material, keep it family-friendly.</li>
+						<li>The game hosts have the final say on whether a submission fits the prompt.</li>
+					</ul>
+				</div>
+				<div>
+					<table id="score_tbl" class = "center" style="margin-top: 10px; border-spacing: 20px; padding-top: 0px;">
+						<tr>
+							<th>Name</th>
+							<th>Score</th>
+							<th>1st</th>
+							<th>2nd</th>
+							<th>3rd</th>
+							<th>Other</th>
+							<th>Minus</th>
+						</tr>
+						<tr>
+							<td id="col0"><input type="text"></td>
+							<td id="col1" class="score">0</td>
+							<td id="col2"><button onclick="addScore(this, 5)" class="first">+5</button></td>
+							<td id="col3"><button onclick="addScore(this, 3)" class="second">+3</button></td>
+							<td id="col4"><button onclick="addScore(this, 2)" class="third">+2</button></td>
+							<td id="col5"><button onclick="addScore(this, 1)" class="other">+1</button></td>
+							<td id="col6"><button onclick="addScore(this, -1)" class="minus">-1</button></td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
 	</body>
 
