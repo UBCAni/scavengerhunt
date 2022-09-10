@@ -1,13 +1,15 @@
 # scavengerhunt
 
 ## Instructions:
-1. Prepare a separate list of prompts on a Google Doc or similar.
+1. Prepare a list of prompts on Google Sheets, and ensure the first row of the sheet is called 'Prompt' (without quotes).
+1. Share the spreadsheet as 'Anyone with this link can view'.
 1. Launch `index.html`.
 1. Enter the desired round length into the timer box (defaults to 180 seconds or 3 minutes).
+1. Copy the ID of the spreadsheet URL into the 'Prompts ID' box. E.g. if the URL is `https://docs.google.com/spreadsheets/d/18YCcQmOxzISIXKPfrNNe52owynhVZNKKlf2977U9IQw/edit?usp=sharing`, you would copy `18YCcQmOxzISIXKPfrNNe52owynhVZNKKlf2977U9IQw`.
 1. Click 'Start Game'.
 1. On the game screen:
-	1. Copy-paste prompts into the text box at the top.
 	1. 'Start Timer' starts the timer countdown and changes the prompt to 'Time's up!' when it finishes.
+	1. 'Next prompt' advances to the next prompt in the sheet.
 	1. 'Sort Scores' sorts all players by score.
 	1. 'Add Player' adds anothe row to the player list.
 	1. 'Quit' refreshes the page so you can start a new game.
