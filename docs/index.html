@@ -158,8 +158,8 @@
 		}
 
 		function startTimer(){
-			timer.clearInterval()
-			
+			clearInterval(timer)
+
 			// have to show timer once before entering setInterval since setInterval waits out the duration BEFORE first run
 			var timer_time = timer_val
 			document.getElementById("timer").innerHTML = "Seconds left: " + timer_time
