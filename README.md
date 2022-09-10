@@ -8,8 +8,7 @@
 1. Copy the ID of the spreadsheet URL into the 'Prompts ID' box. E.g. if the URL is `https://docs.google.com/spreadsheets/d/18YCcQmOxzISIXKPfrNNe52owynhVZNKKlf2977U9IQw/edit?usp=sharing`, you would copy `18YCcQmOxzISIXKPfrNNe52owynhVZNKKlf2977U9IQw`.
 1. Click 'Start Game'.
 1. On the game screen:
-	1. 'Start Timer' starts the timer countdown and changes the prompt to 'Time's up!' when it finishes.
-	1. 'Next prompt' advances to the next prompt in the sheet.
+	1. 'Next prompt' advances to the next prompt in the sheet, and starts the timer.
 	1. 'Sort Scores' sorts all players by score.
 	1. 'Add Player' adds anothe row to the player list.
 	1. 'Quit' refreshes the page so you can start a new game.
