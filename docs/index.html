@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<script src="jquery-3.6.0.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/public-google-sheets-parser"></script>
 		<title>Anime Scavenger Hunt</title>
 		<style>
 			*{
@@ -18,6 +19,9 @@
 			}
 			h2{
 				font-size: 100px;
+			}
+			h3{
+				font-size: 50px;
 			}
 			ul li{
 				font-size: 22px;
@@ -64,15 +68,21 @@
 			<div>
 				<label style="font-size: 50px;">Timer (seconds):</label>
 				<input type="number" id="timer_val" value=180 style="width: 200px; font-size: 50px;">
+				<br>
+				<label style="font-size: 30px;">Prompts ID:</label>
+				<input type="text" id="prompt_url" style="width: 800px; font-size: 30px;">
 			</div>
 			<br>
 			<button onclick="startGame()" style="padding: 30px 30px; font-size: 50px;">Start Game</button>
 		</div>
 
 		<div id="game" class="center" style="display: none; padding-top: 0px;">
-			<textarea id="prompt" rows="3" style="width: 1600px; margin-top: 50px; font-size: 50px;"></textarea>
+			<span style="vertical-align: middle; display: inline-block; line-height: 50px; padding-top: 30px;">
+				<h3 id="prompt" style="margin: 0px;">Prompt</h3>
+			</span>
 			<p id="timer" style="margin: 10px; font-size: 50px;">Seconds left: 0</p>
 			<button onclick="startTimer()">Start timer</button>
+			<button onclick="nextPrompt()">Next prompt</button>
 			<button onclick="sortScores()">Sort scores</button>
 			<button onclick="addRow()">Add player</button>
 			<button onclick="window.location.reload();" style="margin-left: 400px;">Quit</button>
@@ -116,79 +126,100 @@
 	</body>
 
 	<script>
-		var timer;
-		var timer_val;
+		var timer
+		var timer_val
+		var parser
+		var prompt_list
+		var prompt_index
 
 		function startGame(){
 			document.getElementById("menu").style.display = "none"
 			document.getElementById("game").style.display = "block"
 
-			timer_val = document.getElementById("timer_val").value;
+			timer_val = document.getElementById("timer_val").value
+
+			// https://www.npmjs.com/package/public-google-sheets
+			parser = new PublicGoogleSheetsParser(document.getElementById("prompt_url").value)
+			parser.parse().then((items) => {
+				prompt_list = Object.values(items)
+			})
+			prompt_index = 0
 		}
 
 		function startTimer(){
 			// have to show timer once before entering setInterval since setInterval waits out the duration BEFORE first run
 			var timer_time = timer_val
-			document.getElementById("timer").innerHTML = "Seconds left: " + timer_time;
+			document.getElementById("timer").innerHTML = "Seconds left: " + timer_time
 			timer = setInterval(function(){
-				timer_time--;
+				timer_time--
 
 				// end when timer hits -1 so it displays the 0 on screen
 				if(timer_time < 0){
 					document.getElementById("prompt").value = "Time's up!"
-					clearInterval(timer);
-					return;
+					clearInterval(timer)
+					return
 				}
 
-				document.getElementById("timer").innerHTML = "Seconds left: " + timer_time;
-			}, 1000);
+				document.getElementById("timer").innerHTML = "Seconds left: " + timer_time
+			}, 1000)
+		}
+
+		function nextPrompt(){
+			prompt_index++
+			
+			if(prompt_index >= prompt_list.length){
+				document.getElementById("prompt").innerHTML = "Ran out of prompts!"
+			}
+			else{
+				document.getElementById("prompt").innerHTML = prompt_list[prompt_index]
+			}
 		}
 
 		//https://stackoverflow.com/questions/2315600/jquery-getting-the-text-value-of-a-table-cell-in-the-same-row-as-a-clicked-ele
 		function addScore(self, score){
-			var currScore = $(self).closest('tr').children('td.score').text();
-			newScore = parseInt(currScore) + score;
-			$(self).closest('tr').children('td.score').text(newScore);
+			var currScore = $(self).closest('tr').children('td.score').text()
+			newScore = parseInt(currScore) + score
+			$(self).closest('tr').children('td.score').text(newScore)
 		}
 
 		//https://www.etutorialspoint.com/index.php/11-dynamically-add-delete-html-table-rows-using-javascript	
 		function addRow(){
-			var table = document.getElementById('score_tbl');
-			var rowCount = table.rows.length;
-			var cellCount = table.rows[0].cells.length; 
-			var row = table.insertRow(rowCount);
+			var table = document.getElementById('score_tbl')
+			var rowCount = table.rows.length
+			var cellCount = table.rows[0].cells.length;
+			var row = table.insertRow(rowCount)
 			for(var i = 0; i <= cellCount; i++){
-				var cell = 'cell'+i;
-				cell = row.insertCell(i);
+				var cell = 'cell'+i
+				cell = row.insertCell(i)
 				var copycel = document.getElementById('col'+i).innerHTML;
-				cell.innerHTML = copycel;
+				cell.innerHTML = copycel
 				if(i == 1){
-					cell.classList.add("score");
-					cell.innerHTML = 0;
+					cell.classList.add("score")
+					cell.innerHTML = 0
 				}
 			}
 		}
 
 		//https://www.w3schools.com/howto/howto_js_sort_table.asp
 		function sortScores() {
-			var table, rows, switching, i, x, y, shouldSwitch;
-			table = document.getElementById("score_tbl");
-			switching = true;
+			var table, rows, switching, i, x, y, shouldSwitch
+			table = document.getElementById("score_tbl")
+			switching = true
 				while (switching) {
-					switching = false;
-					rows = table.rows;
+					switching = false
+					rows = table.rows
 						for (i = 1; i < (rows.length - 1); i++) {
-						shouldSwitch = false;
-						x = rows[i].getElementsByTagName("TD")[1];
-						y = rows[i + 1].getElementsByTagName("TD")[1];
+						shouldSwitch = false
+						x = rows[i].getElementsByTagName("TD")[1]
+						y = rows[i + 1].getElementsByTagName("TD")[1]
 						if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
-							shouldSwitch = true;
-							break;
+							shouldSwitch = true
+							break
 						}
 					}
 					if (shouldSwitch) {
-					rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-					switching = true;
+					rows[i].parentNode.insertBefore(rows[i + 1], rows[i])
+					switching = true
 					}
 				}
 			}
